@@ -39,6 +39,11 @@ export const config = {
     gemmaDir: process.env.GEMMA_DIR || path.resolve(__dirname, "../../gemma"),
     autoStart: process.env.AUTO_START_GEMMA !== "false",
   },
+  keepAlive: {
+    enabled: process.env.ENABLE_KEEP_ALIVE !== "false",
+    url: process.env.PING_URL || process.env.KEEP_ALIVE_URL || "",
+    intervalMs: parseInt(process.env.PING_INTERVAL_MS || "60000", 10), // default 1 minute
+  },
   runBugTest: process.env.RUN_BUG_TEST === "true",
 };
 

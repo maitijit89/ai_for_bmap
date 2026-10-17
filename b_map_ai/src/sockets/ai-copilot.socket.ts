@@ -17,6 +17,8 @@ export function initializeCopilotSocket(httpServer: HttpServer): SocketIOServer 
       methods: ["GET", "POST"],
     },
     transports: ["websocket", "polling"],
+    pingInterval: 60000, // 1 minute WebSocket keep-alive ping interval
+    pingTimeout: 20000,
   });
 
   // Handshake Authentication Guard

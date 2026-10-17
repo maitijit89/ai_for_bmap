@@ -4,7 +4,7 @@ import cors from "cors";
 import config from "./config";
 import DatabaseManager from "./config/database";
 import { navigationRoutes, copilotRoutes } from "./routes";
-import { LlmService } from "./services";
+import { LlmService, KeepAliveService } from "./services";
 import { initializeCopilotSocket } from "./sockets";
 import {
   requestLogger,
@@ -151,6 +151,15 @@ app.get("/ready", async (_req: Request, res: Response) => {
   });
 });
 
+// Production Lightweight Keep-Alive Ping Endpoint
+app.get("/ping", (_req: Request, res: Response) => {
+  res.status(200).json({
+    status: "pong",
+    timestamp: new Date().toISOString(),
+    uptime_seconds: Math.floor(process.uptime()),
+  });
+});
+
 // Mount Routes
 app.use("/api/v1/ai-copilot", copilotRoutes);
 app.use("/api", navigationRoutes);
@@ -214,11 +223,15 @@ const server = httpServer.listen(config.port, async () => {
       console.error(`[B Map AI] Startup bug test failed to execute: ${testErr.message}`);
     }
   }
+
+  // Start 1-Minute Keep-Alive Auto-Pinger (keeps free-tier cloud instances awake)
+  KeepAliveService.start();
 });
 
 // Graceful Shutdown Handlers
 process.on("SIGINT", async () => {
   console.log("\n[B Map AI] Shutting down gracefully...");
+  KeepAliveService.stop();
   io.close();
   await DatabaseManager.disconnect();
   LlmService.stopServer();
@@ -230,6 +243,7 @@ process.on("SIGINT", async () => {
 
 process.on("SIGTERM", async () => {
   console.log("\n[B Map AI] Received SIGTERM. Shutting down...");
+  KeepAliveService.stop();
   io.close();
   await DatabaseManager.disconnect();
   LlmService.stopServer();

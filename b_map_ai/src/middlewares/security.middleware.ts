@@ -40,6 +40,7 @@ export const globalRateLimiter = rateLimit({
   max: config.rateLimit.maxRequests,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => req.path === "/ping" || req.path === "/health",
   message: {
     success: false,
     error: "Too many requests from this client. Please slow down and retry in a moment.",

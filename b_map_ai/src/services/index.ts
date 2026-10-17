@@ -1,6 +1,7 @@
 // Core Foundation Services
 export * from "./llm.service";
 export * from "./navigation.service";
+export * from "./keep-alive.service";
 
 // 🗣️ Pillar 1: In-Drive Conversational Copilot & Agentic LLM
 export * from "./ai-copilot.service";
