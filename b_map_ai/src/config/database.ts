@@ -1,3 +1,4 @@
+import dns from "dns";
 import mongoose from "mongoose";
 import config from "./index";
 import { PostgresManager, PostgresHealth } from "./postgres";
@@ -39,12 +40,19 @@ export class DatabaseManager {
       console.log(`[DatabaseManager] Connecting to secondary store (MongoDB)...`);
       mongoose.set("strictQuery", true);
 
+      // Support MongoDB Atlas SRV lookups on systems with restrictive local DNS
+      if (uri.startsWith("mongodb+srv://")) {
+        try {
+          dns.setServers(["8.8.8.8", "1.1.1.1"]);
+        } catch {}
+      }
+
       await mongoose.connect(uri, {
         maxPoolSize: 25,
         minPoolSize: 5,
-        serverSelectionTimeoutMS: 4000,
+        serverSelectionTimeoutMS: 8000,
         socketTimeoutMS: 45000,
-        connectTimeoutMS: 5000,
+        connectTimeoutMS: 8000,
       });
 
       this.isMongoConnected = true;
