@@ -14,7 +14,7 @@ services:
       - NODE_ENV=production
       - PORT=3000
       - MONGODB_URI=mongodb://mongodb:27017/bmap_ai
-      - GEMMA_API_URL=http://bmap-gemma:5005
+      - GEMMA_API_URL=http://bmap-gemma:7860
       - AUTO_START_GEMMA=false
       - RATE_LIMIT_WINDOW_MS=60000
       - RATE_LIMIT_MAX=120
@@ -38,10 +38,10 @@ services:
     restart: unless-stopped
     # Internal inference engine (bound strictly to loopback to prevent public network exposure)
     ports:
-      - "127.0.0.1:${GEMMA_PORT:-5005}:5005"
+      - "127.0.0.1:${GEMMA_PORT:-5005}:7860"
     environment:
       - GEMMA_HOST=0.0.0.0
-      - GEMMA_PORT=5005
+      - GEMMA_PORT=7860
       - TF_ENABLE_ONEDNN_OPTS=0
     volumes:
       - gemma_cache:/root/.cache/kagglehub

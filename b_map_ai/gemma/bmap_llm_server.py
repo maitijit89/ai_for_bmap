@@ -247,13 +247,33 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+cors_origins_env = os.environ.get("CORS_ORIGINS", "*")
+origins = [o.strip() for o in cors_origins_env.split(",") if o.strip()] or ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.environ.get("CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(","),
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.get("/")
+def root():
+    return {
+        "service": "B Map AI - Gemma 3 (1B) Inference Service",
+        "model": "Gemma 3 1B (Flax / JAX)",
+        "status": "ready" if _is_ready else "loading",
+        "ready": _is_ready,
+        "endpoints": {
+            "health": "/health",
+            "chat": "POST /v1/chat",
+            "navigation": "POST /v1/navigation",
+            "metrics": "GET /metrics",
+            "swagger_docs": "/docs"
+        }
+    }
 
 
 class ChatMessage(BaseModel):
@@ -554,7 +574,7 @@ async def navigation_endpoint(req: NavigationGuidanceRequest):
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("GEMMA_PORT", 5005))
-    host = os.environ.get("GEMMA_HOST", "127.0.0.1")
+    port = int(os.environ.get("PORT", os.environ.get("GEMMA_PORT", 7860)))
+    host = os.environ.get("GEMMA_HOST", "0.0.0.0")
     print(f"Starting B Map AI Gemma Deep Thinking Server on http://{host}:{port} ...")
     uvicorn.run(app, host=host, port=port, log_level="info")
