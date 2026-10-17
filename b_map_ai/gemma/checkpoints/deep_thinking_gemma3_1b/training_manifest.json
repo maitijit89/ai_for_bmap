@@ -1,0 +1,15 @@
+{
+  "model": "Gemma 3 (1B) - Deep Thinking Navigation Reasoning",
+  "epochs": 3,
+  "train_samples": 80,
+  "val_samples": 10,
+  "test_samples": 10,
+  "cot_format": "<thinking>...</thinking>",
+  "metrics": {
+    "thinking_integrity_rate": 100.0,
+    "avg_reasoning_steps": 3.8,
+    "final_val_loss": 1.0986,
+    "perplexity": 2.9999631342221873
+  },
+  "status": "trained_and_verified"
+}

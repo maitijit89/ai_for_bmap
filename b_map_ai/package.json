@@ -1,0 +1,52 @@
+{
+  "name": "b_map_ai",
+  "version": "1.0.0",
+  "description": "B Map AI - Navigation and Geospatial LLM Backend",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
+    "build": "npm run clean && tsc",
+    "start": "node dist/index.js",
+    "start:test": "tsx scripts/start_and_bug_test.ts",
+    "test:bugs": "tsx tests/test_bug_suite.ts",
+    "test:copilot": "tsx tests/test_copilot_platform.ts",
+    "test:resilience": "tsx tests/test_production_resilience.ts",
+    "test:thinking": "tsx tests/test_deep_thinking.ts",
+    "test:postgres": "tsx tests/test_postgres_integration.ts",
+    "test:e2e": "tsx tests/test_client.ts",
+    "gemma:train": "e:\\v\\Scripts\\python.exe gemma/train_navigation_knowledge.py",
+    "gemma:train:thinking": "e:\\v\\Scripts\\python.exe gemma/train_deep_thinking.py",
+    "gemma:start": "e:\\v\\Scripts\\python.exe gemma/bmap_llm_server.py",
+    "test": "tsx tests/test_bug_suite.ts"
+  },
+  "keywords": [
+    "bmap",
+    "navigation",
+    "llm",
+    "gemma",
+    "geospatial"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^16.4.7",
+    "express": "^5.0.1",
+    "express-rate-limit": "^8.7.1",
+    "helmet": "^8.3.0",
+    "mongoose": "^9.11.2",
+    "pg": "^8.23.1",
+    "socket.io": "^4.8.4",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.2",
+    "@types/pg": "^8.23.1",
+    "@types/socket.io": "^3.0.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

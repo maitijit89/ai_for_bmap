@@ -1,0 +1,14 @@
+{
+  "model": "Gemma 3 (1B) - Deep Navigation Tuned",
+  "epochs": 3,
+  "train_samples": 91,
+  "val_samples": 11,
+  "test_samples": 12,
+  "metrics": {
+    "test_intent_accuracy": 100.0,
+    "test_bleu": 1.0,
+    "final_val_loss": 1.0692,
+    "perplexity": 2.9130481290497254
+  },
+  "status": "trained_and_verified"
+}

@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+env/
+ENV/
+
+# Production build artifacts
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# Environment variables & secrets (Security Critical)
+.env
+.env.*
+!.env.example
+
+# Python cache & tests
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.pytest_cache/
+.pytype/
+.cache/
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
