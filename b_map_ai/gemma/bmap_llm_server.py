@@ -574,7 +574,7 @@ async def navigation_endpoint(req: NavigationGuidanceRequest):
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", os.environ.get("GEMMA_PORT", 7860)))
-    host = os.environ.get("GEMMA_HOST", "0.0.0.0")
+    port = int(os.environ.get("GEMMA_PORT", os.environ.get("PORT", 5005)))
+    host = os.environ.get("GEMMA_HOST", "127.0.0.1")
     print(f"Starting B Map AI Gemma Deep Thinking Server on http://{host}:{port} ...")
     uvicorn.run(app, host=host, port=port, log_level="info")
