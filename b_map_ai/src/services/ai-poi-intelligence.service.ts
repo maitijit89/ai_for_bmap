@@ -61,7 +61,7 @@ export class AiPoiIntelligenceService {
     parkingLevel?: string;
   }): { audioScript: string; triggered: boolean } {
     const isWithin300Meters = params.distanceMeters <= 300;
-    const road = params.entranceRoad || "Linkstraße";
+    const road = params.entranceRoad || "Outer Circle Access Road";
     const bays = params.vacantBays || 18;
     const level = params.parkingLevel || "Level B2";
 

@@ -82,7 +82,7 @@ export class AiVisionAnalyzerService {
       incidentId,
       location: {
         type: "Point" as const,
-        coordinates: input.coordinates || input.currentTelemetry?.coordinates || [13.404954, 52.520008],
+        coordinates: input.coordinates || input.currentTelemetry?.coordinates || [77.2177, 28.6304],
       },
       hazards,
       trafficSigns,

@@ -171,6 +171,23 @@ b_map_ai/
 
 ---
 
+### 🛡️ 8. Zero-Trust Security Perimeter & Cryptographic Attestation (Patch v2.1.0)
+- **Runtime Anti-Tamper Sentinel**:
+  - Deep JavaScript prototype freezing across 12 built-in prototypes (`Object.prototype`, `Array.prototype`, `Function.prototype`, etc.) to eliminate prototype pollution gadget chains (Rule 11.1).
+  - Traps and prohibits dynamic code execution (`eval` and `Function` constructor) (Rule 11.2).
+  - Production V8 debugger / inspector trap terminating execution on memory inspection attacks (Rule 11.3).
+- **Anti-Reconnaissance & Scanner Trap**: Intercepts automated exploit bots targeting `/.env`, `/.git`, `/wp-admin`, `/phpmyadmin`, `/actuator` with zero internal disclosure (Rule 2.4).
+- **NoSQL Injection Sanitizer**: Recursively strips MongoDB operator keys (`$gt`, `$ne`, `$where`, etc.) and nested dot notation (Rule 2.5).
+- **Cryptographic Telemetry Signer & Anti-Replay Guard**: HMAC-SHA256 signature verification (`X-BMap-Signature`) with 45-second timestamp freshness window and sliding nonce deduplication cache (Rule 3.1 & 3.2).
+- **Anti-GPS Spoofing & Kinematics Plausibility**: Enforces $a \le 6.5 \text{ m/s}^2$ acceleration ceiling, $220 \text{ km/h}$ max speed, bearing concordance, and Android `isFromMockProvider` detection (Rule 4.1).
+- **Cryptographic Spatial Proof-of-Presence**: HMAC-SHA256 geofence attestation certificates with 30-minute expiry (Rule 10.1 & 10.2).
+- **App Version & Patch Advisory Endpoints**:
+  - `GET /api/v1/app-version/check`: Enforces mandatory client patch level and compatibility.
+  - `GET /api/v1/security/advisories`: Publishes active security mitigations and CVE remediation status.
+- **Vulnerability Remediation**: Resolved high-severity `body-parser` DoS vulnerability (GHSA-27r3-jxmh-p828) via `body-parser@2.4.0` upgrade; patched `mongoose@9.11.4`; configured Neon PostgreSQL with explicit `sslmode=verify-full`.
+
+---
+
 ## 🚀 Quick Start
 
 ### 1. Build TypeScript
@@ -189,9 +206,13 @@ npm start
 
 ### 3. Run Test Suites
 ```powershell
+# Enterprise Zero-Trust Security & Patch verification:
+npm run test:security
+
 # Full 7 pillars verification test:
 npm run test:copilot
 
 # General navigation endpoints test:
 npm run test:e2e
 ```
+

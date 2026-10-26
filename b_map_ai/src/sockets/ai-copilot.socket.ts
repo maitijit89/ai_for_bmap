@@ -104,7 +104,7 @@ export function initializeCopilotSocket(httpServer: HttpServer): SocketIOServer 
             driverId: driverId ? String(driverId).slice(0, 128) : socket.id,
             prompt: sanitizedPrompt,
             telemetry: telemetry || {
-              coordinates: [13.404954, 52.520008],
+              coordinates: [77.2177, 28.6304],
               speedKmH: 50,
               headingDeg: 120,
               remainingDistanceMeters: 8500,
@@ -112,8 +112,8 @@ export function initializeCopilotSocket(httpServer: HttpServer): SocketIOServer 
               batteryOrFuelSoC: 80,
               activeRouteId: "route_stream_live",
               destinationMetadata: {
-                name: "Destination Hub",
-                coordinates: [13.404954, 52.520008],
+                name: "Connaught Place, New Delhi",
+                coordinates: [77.2177, 28.6304],
               },
             },
           };

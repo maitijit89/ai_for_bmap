@@ -3,22 +3,31 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import config from "./config";
 import DatabaseManager from "./config/database";
-import { navigationRoutes, copilotRoutes } from "./routes";
+import { navigationRoutes, copilotRoutes, appVersionRoutes } from "./routes";
 import { LlmService, KeepAliveService } from "./services";
 import { initializeCopilotSocket } from "./sockets";
+import { AntiTamperSentinel } from "./security/anti-tamper";
 import {
   requestLogger,
   notFoundHandler,
   errorHandler,
   securityHeaders,
   globalRateLimiter,
+  antiReconTrap,
+  noSqlSanitizer,
 } from "./middlewares";
+
+// Initialize Runtime Anti-Tamper Defense Sentinel immediately
+AntiTamperSentinel.init();
 
 const app = express();
 const httpServer = http.createServer(app);
 
 // Initialize Socket.IO Gateway for In-Drive Realtime Streaming
 const io = initializeCopilotSocket(httpServer);
+
+// Anti-Reconnaissance & Scanner Trap (Rule 2.4 - Must execute first)
+app.use(antiReconTrap);
 
 // Production Security & Rate Limiting Middleware
 app.use(securityHeaders);
@@ -32,17 +41,22 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization", "X-Request-Id", "X-API-KEY"],
   })
 );
-app.use(express.json({ limit: "25mb" }));
+app.use(express.json({ limit: "15mb" }));
+app.use(noSqlSanitizer);
 app.use(requestLogger);
 
 // Root Information & Status Route
 app.get("/", async (_req: Request, res: Response) => {
   const modelHealth = await LlmService.getHealth();
   const dbHealth = DatabaseManager.getHealth();
+  const antiTamper = AntiTamperSentinel.getStatus();
 
   res.json({
     platform: "B Map AI Navigation Platform",
-    version: "2.0.0",
+    version: "2.1.0",
+    security_patch_level: "2026-10-26-P1",
+    anti_tamper_defense: antiTamper,
+
     description: "Enterprise-Grade In-Drive Copilot, Multimodal Vision, and Geospatial Intelligence",
     status: "online",
     database: dbHealth,
@@ -126,6 +140,9 @@ app.get("/health", async (_req: Request, res: Response) => {
 
   res.json({
     backend: "healthy",
+    version: "2.1.0",
+    security_patch_level: "2026-10-26-P1",
+    zero_trust_perimeter: "active",
     socket_gateway: "active",
     timestamp: new Date().toISOString(),
     uptime_seconds: Math.floor(process.uptime()),
@@ -137,6 +154,7 @@ app.get("/health", async (_req: Request, res: Response) => {
       node_version: process.version,
     },
   });
+
 });
 
 // Readiness Probe for K8s / Docker container orchestration
@@ -162,7 +180,10 @@ app.get("/ping", (_req: Request, res: Response) => {
 
 // Mount Routes
 app.use("/api/v1/ai-copilot", copilotRoutes);
+app.use("/api/v1/app-version", appVersionRoutes);
+app.use("/api/v1", appVersionRoutes);
 app.use("/api", navigationRoutes);
+
 
 // 404 Handler & Global Error Handler
 app.use(notFoundHandler);
@@ -252,4 +273,5 @@ process.on("SIGTERM", async () => {
   });
 });
 
+export * from "./engines";
 export default app;

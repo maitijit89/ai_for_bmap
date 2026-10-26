@@ -8,6 +8,8 @@ import {
   ClassifyIntentSchema,
   SessionIdParamSchema,
   ArrivalBriefingSchema,
+  IssueProofOfPresenceSchema,
+  VerifyProofOfPresenceSchema,
 } from "../validators";
 import { AiVisionAnalyzerService } from "../services/ai-vision-analyzer.service";
 import { AiTrafficForecasterService } from "../services/ai-traffic-forecaster.service";
@@ -22,6 +24,9 @@ import { ArWalkCycleService } from "../services/ar-walk-cycle.service";
 import { DynamicRecommendationService } from "../services/dynamic-recommendation.service";
 import { EnvironmentService } from "../services/environment.service";
 import { VernacularService, IndianLanguage } from "../services/vernacular.service";
+import { ProofOfPresenceService } from "../services/proof-of-presence.service";
+import { ZeroTrustEngineService } from "../services/zero-trust-engine.service";
+
 
 const router = Router();
 
@@ -51,8 +56,8 @@ router.post("/vision/analyze", validateRequest(VisionAnalyzeSchema), async (req:
 
 router.get("/vision/incidents/nearby", async (req: Request, res: Response) => {
   try {
-    const lng = parseFloat(req.query.lng as string) || 13.404954;
-    const lat = parseFloat(req.query.lat as string) || 52.520008;
+    const lng = parseFloat(req.query.lng as string) || 77.2177;
+    const lat = parseFloat(req.query.lat as string) || 28.6304;
     const radius = parseFloat(req.query.radius as string) || 5000;
 
     const results = await AiVisionAnalyzerService.findNearbyIncidents([lng, lat], radius);
@@ -299,4 +304,43 @@ router.get("/vernacular/languages", (_req: Request, res: Response) => {
   res.json({ success: true, data: VernacularService.getSupportedLanguages() });
 });
 
+// ============================================================================
+// 🛡️ Security, Proof-of-Presence & Zero-Trust Defense Endpoints
+// ============================================================================
+router.post(
+  "/security/proof-of-presence/issue",
+  validateRequest(IssueProofOfPresenceSchema),
+  (req: Request, res: Response) => {
+    try {
+      const attestation = ProofOfPresenceService.issueAttestation(req.body);
+      res.json({ success: true, data: attestation });
+    } catch (err: any) {
+      res.status(400).json({ success: false, error: err.message });
+    }
+  }
+);
+
+router.post(
+  "/security/proof-of-presence/verify",
+  validateRequest(VerifyProofOfPresenceSchema),
+  (req: Request, res: Response) => {
+    try {
+      const result = ProofOfPresenceService.verifyAttestation(req.body);
+      res.json({ success: true, data: result });
+    } catch (err: any) {
+      res.status(400).json({ success: false, error: err.message });
+    }
+  }
+);
+
+router.post("/security/zero-trust/evaluate", (req: Request, res: Response) => {
+  try {
+    const verdict = ZeroTrustEngineService.evaluateRequest(req.body);
+    res.json({ success: true, data: verdict });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 export default router;
+

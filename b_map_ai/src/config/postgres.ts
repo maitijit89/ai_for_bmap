@@ -37,14 +37,19 @@ export class PostgresManager {
     try {
       console.log(`[PostgresManager] Initializing Neon PostgreSQL pool...`);
 
-      // Strip or sanitize options if needed while preserving SSL
+      // Strip or sanitize options while upgrading to sslmode=verify-full for modern libpq 3.0 semantics
+      let normalizedConnectionString = connectionString;
+      if (normalizedConnectionString.includes("sslmode=require")) {
+        normalizedConnectionString = normalizedConnectionString.replace("sslmode=require", "sslmode=verify-full");
+      }
+
       const isRemoteSsl =
-        connectionString.includes("sslmode=require") ||
-        connectionString.includes("neon.tech") ||
+        normalizedConnectionString.includes("sslmode=verify-full") ||
+        normalizedConnectionString.includes("neon.tech") ||
         config.nodeEnv === "production";
 
       const poolConfig: PoolConfig = {
-        connectionString,
+        connectionString: normalizedConnectionString,
         ssl: isRemoteSsl
           ? {
               rejectUnauthorized: process.env.PG_REJECT_UNAUTHORIZED !== "false",

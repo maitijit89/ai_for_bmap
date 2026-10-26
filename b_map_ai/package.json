@@ -1,6 +1,6 @@
 {
   "name": "b_map_ai",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "description": "B Map AI - Navigation and Geospatial LLM Backend",
   "main": "dist/index.js",
   "scripts": {
@@ -9,6 +9,7 @@
     "build": "npm run clean && tsc",
     "start": "node dist/index.js",
     "start:test": "tsx scripts/start_and_bug_test.ts",
+    "test:security": "tsx tests/test_security_patches.ts",
     "test:bugs": "tsx tests/test_bug_suite.ts",
     "test:copilot": "tsx tests/test_copilot_platform.ts",
     "test:resilience": "tsx tests/test_production_resilience.ts",
@@ -18,8 +19,9 @@
     "gemma:train": "e:\\v\\Scripts\\python.exe gemma/train_navigation_knowledge.py",
     "gemma:train:thinking": "e:\\v\\Scripts\\python.exe gemma/train_deep_thinking.py",
     "gemma:start": "e:\\v\\Scripts\\python.exe gemma/bmap_llm_server.py",
-    "test": "tsx tests/test_bug_suite.ts"
+    "test": "tsx tests/test_security_patches.ts"
   },
+
   "keywords": [
     "bmap",
     "navigation",

@@ -30,3 +30,9 @@ export * from "./ar-walk-cycle.service";
 export * from "./dynamic-recommendation.service";
 export * from "./environment.service";
 export * from "./vernacular.service";
+
+// 🛡️ Zero-Trust Defense, Anti-Spoofing & Spatial Attestation Services
+export * from "./anti-spoofing.service";
+export * from "./proof-of-presence.service";
+export * from "./zero-trust-engine.service";
+

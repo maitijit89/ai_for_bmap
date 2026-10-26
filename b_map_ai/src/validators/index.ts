@@ -137,3 +137,25 @@ export const ArrivalBriefingSchema = z.object({
   vacantBays: z.number().int().optional(),
   parkingLevel: z.string().max(64).optional(),
 });
+
+export const IssueProofOfPresenceSchema = z.object({
+  subjectId: z.string().min(1, "subjectId is required"),
+  targetCoordinate: CoordinatesSchema,
+  geofenceRadiusMeters: z.number().positive("geofenceRadiusMeters must be positive"),
+  actualObservedCoordinate: CoordinatesSchema,
+  rawBreadcrumbs: z.array(z.any()).optional(),
+});
+
+export const VerifyProofOfPresenceSchema = z.object({
+  attestationId: z.string().min(1, "attestationId is required"),
+  subjectId: z.string().min(1, "subjectId is required"),
+  targetCoordinate: CoordinatesSchema,
+  geofenceRadiusMeters: z.number().positive(),
+  actualObservedCoordinate: CoordinatesSchema,
+  distanceFromCentroidMeters: z.number().optional(),
+  rawBreadcrumbHash: z.string().min(1, "rawBreadcrumbHash is required"),
+  issuedAt: z.number(),
+  expiresAt: z.number(),
+  signature: z.string().min(1, "signature is required"),
+});
+

@@ -16,7 +16,7 @@ export class AiCopilotController {
       }
 
       const effectiveTelemetry = telemetry || {
-        coordinates: [13.404954, 52.520008],
+        coordinates: [77.2177, 28.6304],
         speedKmH: 60,
         headingDeg: 90,
         remainingDistanceMeters: 12000,
@@ -24,8 +24,8 @@ export class AiCopilotController {
         batteryOrFuelSoC: 75,
         activeRouteId: "route_default",
         destinationMetadata: {
-          name: "City Center",
-          coordinates: [13.404954, 52.520008],
+          name: "Connaught Place, New Delhi",
+          coordinates: [77.2177, 28.6304],
         },
       };
 
